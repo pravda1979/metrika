@@ -1,0 +1,32 @@
+{
+  "name": "pravda1979/yii2-metrika",
+  "description": "Метрика",
+  "type": "yii2-extension",
+  "keywords": [
+    "yii2",
+    "extension",
+    "metrika"
+  ],
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "pravda1979",
+      "email": "pravda.aleksei@gmail.com"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ],
+  "require": {
+    "php": ">=7.1.0",
+    "yiisoft/yii2": "~2.0.12"
+  },
+  "autoload": {
+    "psr-4": {
+      "pravda1979\\metrika\\": "src"
+    }
+  }
+}
