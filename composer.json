@@ -22,7 +22,8 @@
   ],
   "require": {
     "php": ">=7.1.0",
-    "yiisoft/yii2": "~2.0.12"
+    "yiisoft/yii2": "~2.0.12",
+    "miloschuman/yii2-highcharts-widget": "^7.0"
   },
   "autoload": {
     "psr-4": {

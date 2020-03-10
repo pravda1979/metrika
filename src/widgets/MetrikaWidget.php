@@ -3,7 +3,8 @@
 
 namespace pravda1979\metrika\widgets;
 
-use pravda1979\metrika\interfaces\DataInterface;
+use pravda1979\metrika\abstracts\AbstractData;
+use pravda1979\metrika\forms\FilterForm;
 use pravda1979\metrika\interfaces\MethodInterface;
 use yii\base\Exception;
 use yii\base\Widget;
@@ -14,11 +15,26 @@ use yii\base\Widget;
  */
 class MetrikaWidget extends Widget implements MethodInterface
 {
-    /** @var DataInterface */
+    /** @var AbstractData */
     private $_dataLoader;
 
     /** @var string */
     public $method;
+
+    /** @var string */
+    public $viewFile = 'index';
+
+    /** @var string */
+    public $filterViewFile = 'filter';
+
+    /** @var string */
+    public $label = '';
+
+    /** @var string */
+    public $url;
+
+    /** @var string */
+    public $showFilter = true;
 
     /**
      * @throws Exception
@@ -27,27 +43,29 @@ class MetrikaWidget extends Widget implements MethodInterface
     public function init()
     {
         parent::init();
-        if ($this->getDataLoader() === null) {
-            $this->_dataLoader = \Yii::createObject(DataInterface::class);
-        }
         if ($this->method === null) {
-            throw new Exception('Wrong "method" property');
+            throw new Exception('You must set "method" property');
         }
-
+        if ($this->url === null) {
+            throw new Exception('You must set "url" property');
+        }
+        if ($this->getDataLoader() === null) {
+            $this->setDataLoader(\Yii::createObject(AbstractData::class));
+        }
     }
 
     /**
-     * @return DataInterface|null
+     * @return AbstractData|null
      */
-    public function getDataLoader(): ?DataInterface
+    public function getDataLoader(): ?AbstractData
     {
         return $this->_dataLoader;
     }
 
     /**
-     * @param DataInterface $dataLoader
+     * @param AbstractData $dataLoader
      */
-    public function setDataLoader(DataInterface $dataLoader)
+    public function setDataLoader(AbstractData $dataLoader)
     {
         $this->_dataLoader = $dataLoader;
     }
@@ -58,8 +76,15 @@ class MetrikaWidget extends Widget implements MethodInterface
      */
     public function run()
     {
-        $data = $this->getData($this->method);
-        \yii\helpers\VarDumper::dump($data, 10, 1);
+        return $this->render($this->viewFile, [
+            'label' => $this->label,
+            'filterViewFile' => $this->filterViewFile,
+            'dataLoader' => $this->getDataLoader(),
+            'method' => $this->method,
+            'url' => $this->url,
+            'chartId' => uniqid($this->method),
+            'showFilter' => $this->showFilter,
+        ]);
     }
 
     /**
@@ -67,15 +92,16 @@ class MetrikaWidget extends Widget implements MethodInterface
      * @return array
      * @throws Exception
      */
-    private function getData($method)
+    public function getData()
     {
-        switch ($method) {
+        switch ($this->method) {
             case self::METHOD_PAGEVIEWS:
-                return $this->_dataLoader->getDataPageviews();
+                return $this->getDataLoader()->getDataPageviews();
+            case self::METHOD_SESSIONS:
+                return $this->getDataLoader()->getDataVisits();
             default:
                 throw new Exception('Wrong "method" property');
         }
 
     }
-
 }

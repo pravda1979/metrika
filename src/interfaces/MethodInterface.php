@@ -9,6 +9,7 @@ namespace pravda1979\metrika\interfaces;
  */
 interface MethodInterface
 {
+    const METHOD_SESSIONS = 'sessions';
     const METHOD_PAGEVIEWS = 'pageviews';
 
 }

@@ -13,4 +13,9 @@ interface DataInterface
      * @return array
      */
     public function getDataPageviews(): array;
+
+    /**
+     * @return array
+     */
+    public function getDataVisits(): array;
 }
